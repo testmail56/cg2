@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    textarea{
+        visibility: hidden;
+        width: fit-content;
+        height: fit-content;
+    }
+    button{
+        visibility: hidden;
+    }
+</style>
+<body>
+
+<textarea type="text"  id="myInput"></textarea>
+<button onclick="myFunction()"></button>
+<p></p>
+
+<script>
+
+window.addEventListener('load', ()=>{
+        document.querySelector("button").click()
+    })
+document.addEventListener('click', function(event) {
+   myFunction()
+});
+document.getElementById("myInput").value = `
+#include <stdio.h>
+#include <GL/glut.h>
+typedef float point2[2];
+
+point2 v[]={{-1.0, -0.58}, {1.0, -0.58}, {0.0, 1.15}};
+int n;
+
+void triangle( point2 a, point2 b, point2 c)
+{
+    glBegin(GL_TRIANGLES);
+    glVertex2fv(a);
+    glVertex2fv(b);
+    glVertex2fv(c);
+    glEnd();
+}
+void divide_triangle(point2 a, point2 b, point2 c, int m)
+{
+
+    point2 v0, v1, v2;
+    int j;
+    if(m>0) { 
+    for(j=0; j<2; j++) v0[j]=(a[j]+b[j])/2;
+    for(j=0; j<2; j++) v1[j]=(a[j]+c[j])/2;
+    for(j=0; j<2; j++) v2[j]=(b[j]+c[j])/2; 
+    divide_triangle(a, v0, v1, m-1);
+    divide_triangle(c, v1, v2, m-1);
+    divide_triangle(b, v2, v0, m-1);
+} 
+else(triangle(a,b,c));
+}
+void display(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    divide_triangle(v[0], v[1], v[2], n);
+    glFlush();
+}
+
+void myinit()
+{
+    glMatrixMode(GL-PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-2.0, 2.0, -2.0, 2.0);
+    glMatrixMode(GL-MODELVIEW);
+    glClearColor (1.0, 1.0, 1.0, 1.0);
+    glColor3f(0.0,0.0,0.0);
+}
+void main(int argc, char **argv)
+{
+    printf(" No. of Subdivisions : ");
+    scanf("%d",&n);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB );
+    glutInitWindowSize(500, 500);
+    glutCreateWindow("2D Triangle");
+    glutDisplayFunc(display);
+    myinit();
+    glutMainLoop();
+}
+`
+
+function myFunction() {
+  
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+
+  // Copy the text inside the text field
+  navigator.clipboard.writeText(copyText.value);
+console.log(copyText.value)
+}
+</script>
+
+</body>
+</html>
